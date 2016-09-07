@@ -1,0 +1,4 @@
+EN algunos casos la conexion ssh no abre el ambiente grafico, se debe recurrir al siguiente procedimiento:
+1) En la pestaña de session escoger la opcion xdmcp y dejarla abierta ( aparecera una pantalla negra )
+2) Abrir una conexion como de costumbre con el ssh en MobaXterm al servidor requerido.
+3) Al ingresar probar el modo grafico invocando xclock.
