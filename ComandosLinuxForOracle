@@ -1,0 +1,13 @@
+grep MemTotal /proc/meminfo
+free
+df -h /dev/shm/    To determine the amount of shared memory available
+uname -m   system architecture
+uname -r    Kernel requerido
+rpm -q package_name      chequear paquetes instalados
+http://www.unixodbc.org para bajar los paquetes de ODBC
+grep MemTotal /proc/meminfo
+grep SwapTotal /proc/meminfo
+
+This command installs the support tools, the library, and the kernel driver for the Linux kernel version running on your system.
+  # up2date -i oracleasm-support oracleasmlib oracleasm-'uname -r'
+  
