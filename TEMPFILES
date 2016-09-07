@@ -1,0 +1,27 @@
+Check Oracle TEMP tablespace
+
+Para crear usuario especificando su area temp
+CREATE USER scott DEFAULT TABLESPACE data TEMPORARY TABLESPACE temp;
+SQL> ALTER USER scott TEMPORARY TABLESPACE temp;
+
+Los tempfiles no son registrados en el controlfile a diferencia de otros DF
+Se pueden borrar DF de un tablespace temp a diferencias de los tradicionales donde hay que borrar el tablespace completo.
+
+Para crear el tablespace temp:    ( de versipes 8 y 9 en adelante
+  CREATE TEMPORARY TABLESPACE temp;
+Para definir el default
+  ALTER DATABASE DEFAULT TEMPORARY TABLESPACE temp;
+  
+El default tablespace temp es SYSTEM
+  Para chequear el defaul tablespace ejecutamos:
+    SELECT * FROM DATABASE_PROPERTIES where PROPERTY_NAME='DEFAULT_TEMP_TABLESPACE';
+Consideraciones de performance:
+  Crear siempre locally management
+  Stripe los archivos a diferentes discos
+  
+Monitoreo de TEMP TABLESPACE
+  Usar la vista v$tempfile y dba_temp_files
+  la dba_free_space no refleja el espacio del temp, se debe ver con V$TEMP_SPACE_HEADER
+    select TABLESPACE_NAME, BYTES_USED, BYTES_FREE from V$TEMP_SPACE_HEADER;
+
+  
