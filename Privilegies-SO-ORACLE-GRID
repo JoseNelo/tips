@@ -1,0 +1,19 @@
+COn el comando ID "user" vemos el id del usuario y los grupos asociados
+
+Con el comando useradd -u , creamos un usuario y con el flag -u asignamos un ID especifico, para el caso de RAC es importante de que este ID debe ser igual en todos los nodos
+la opcion -g indica el grupo primario
+la opcion -G indica el grupo secundario
+
+El comando usermod, modifica los ID y grupos de un usuario.
+
+Enter the following commands to create a minimal operating system authentication configuration
+# groupadd -g 54421 oinstall
+# groupadd -g 54422 dba
+# useradd -u 54321 -g oinstall -G dba oracle
+# useradd -u 54322 -g oinstall -G dba grid
+# mkdir -p  /u01/app/12.1.0/grid
+# mkdir -p /u01/app/grid
+# mkdir -p /u01/app/oracle
+# chown -R grid:oinstall /u01
+# chown oracle:oinstall /u01/app/oracle
+# chmod -R 775 /u01/
