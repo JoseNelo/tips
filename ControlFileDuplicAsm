@@ -1,0 +1,24 @@
+Hacer Backup del SPFILE
+  create pfile='/tmp/spfileBACKUP_SID.ora' from spfile;  Esto generara un archivo texto en el directorio que se desee.
+Chequear  los parametros del ContrilFile:
+  select * from v$controlfile;
+      Ejemplo salida : +DATA01/MYDB/controlfile/current.200.899418013
+Actualizar en el spfile el parametro del control_files:
+  alter system set control_files='+DATA01/MYDB/controlfile/current.200.899418013',
+      '+DGFRAG','+DGXXX' scope=spfiles sid='*';
+      Nota: Aca se altera el parametro del control_files con el valor obtenido de la consulta de vista
+      v$controlfile y se agrega los disk groups a donde queremos generar copias del controlfile.
+Luego:
+  Bajamos la BD : shutdown immediate
+  Subimos la instancia en modo NOMOUNT: startup nomount;
+  Nota : En este momento tenemos un archivo de parametros que cuando se trate de abrir 
+    la BD el control file ira a buscar los control files referenciados ya en la variable
+Punto clave:
+  EN este paso vamos a crear el o los nuevos control files en las rutas especificadas en la el parametro contro_files del archivo init.
+  Especificamente se realiza una copia del controlfile actual hacia los nuevos puntos donde estaran las copias.
+  rman target /
+  restore controlfile from '+DATA1/MYDB/controlfile/current.200.899418013';
+    Nota : en este paso se realiza una copia a todo los destinos de controlfile.
+    Proximo paso es actualizar el spfile con los nombres de los controlfiles asignados por RMAN y se 
+    especifican ahora pero con el nombre completo  como en la linea 7.
+Reiniciamos  la BD y verificamos de nuevo el v$controlfile
