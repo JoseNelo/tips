@@ -1,0 +1,43 @@
+1) Instalar Grid Infrastructure
+2) Cambiar la ubicacion del control file y setear el parametro para la ubicacion por default de todos
+  los datafiles.
+    Ejemplo:
+      alter system set control_files='+DATA','+DATA1' scope=spfile;
+      alter system set db_create_file_dest='+DATA' scope=spfile;
+3)  Para multiplexar control files usamos dos disk groups
+4) Reiniciar la BD en modo NOMOUNT: shutdown immediate;    startup nomount
+5) Ahora nos conectamos con RMAN y restauramos el primero control file de uno ya existente
+      rman target /
+      restore controlfile from '/u01/oradata/YYAPRD/control01.ctl';   <------ EJEMPLO
+                Salida ejemplo
+                      .......starting restore at 08-APR-13
+                              using channel ORA_DISK_1
+                              channel ORA_DISK_1: copied control file copy
+                              output file name=+DATA/yyaprd/controlfile/current.256.812244559
+                              output file name=+DATA1/yyaprd/controlfile/current.256.812244561
+                              Finished restore at 08-APR-13
+6) RMAN<  alter database mount;   
+7) Nuevamente con RMAN hacemos una copia de la BD 
+    RMAN> backup as copy database format '+DATA'; Esto hara una copia de la BD al diskgroup +DATA
+8) RMAN> switch database to copy;
+    RMAN> alter database open;
+9) Chequeamos lo datafiles
+  SQL> select file_name from dba_data_files;
+10) Chequeamos el tablespace temp
+  select file_name from dba_temp_files;
+11) Le agregamos espacio al tablespace temp el espacio sera asignado ahora de asm.
+    alter tablespace temp add tempfile size 500M;
+12) Chequeamos select file_name from dba_temp_files;
+13) Borramos el datafile del tablespace temp asociado al FileSystem para dejar solo el DF en el ASM
+    alter database tempfile '/u04/oradata/YYAPRD/temp01.dbf' drop including datafiles;
+      Nota : solo para el tablespace temp podemos borrar online un datafile.
+14) Para mover o crear nuevos redologs online:
+    SQL> alter database add logfile group 4 ('+DATA','+DATA1') size 10M;
+        Nota : con este comando podemos crear los grupos de redologs dentro de ASM especificando el o los diskgroups.
+15) Para borrar los redologs en el FileSystem
+    alter database drop logfile group 2;
+16) Comandos utiles: alter system switch logfile; alter system checkpoint:
+
+
+      
+      
