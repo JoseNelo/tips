@@ -1,0 +1,5 @@
+No tiene valor por defaul
+Especifica la ubicacion poe default de los Oracle-Manageddatafiles y de los controlfile y redo si no se especifica la ubicacion de estos
+  en DB_CREATE_ONLINE_LOG_DEST_n 
+Si se especifica un File System el directorio debe existir, Oracle no los crea
+    Nota: Oracle_Managed Files es una forma de manejar los archivos por Oracle como objetos para tablespace,controfile y redologs.
